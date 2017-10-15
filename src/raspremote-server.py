@@ -4,6 +4,7 @@
 from flask import Flask, jsonify, abort, request
 import subprocess
 from command_line import CommandLine
+import sys
 
 API_PATH = "/raspremote/api/"
 CURRENT_API_VERSION = "v1.0/"
@@ -34,7 +35,14 @@ def cli():
         return command_line.result
     else:
         return command_line.error
+        
+        
+def main():
+    if len(sys.argv) < 2:
+        print "Missing host"
+        return False
+    app.run(debug=True, host=sys.argv[1])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    main()
 
