@@ -5,6 +5,7 @@ from flask import Flask, jsonify, abort, request
 import subprocess
 from command_line import CommandLine
 import sys
+import launcher
 
 API_PATH = "/raspremote/api/"
 CURRENT_API_VERSION = "v1.0/"
@@ -35,6 +36,15 @@ def cli():
         return command_line.result
     else:
         return command_line.error
+
+''' Launch a program '''
+@app.route(API_PATH + CURRENT_API_VERSION + 'launch', methods=['POST'])
+def launch():
+    launch = launcher.Launcher()
+    if launch.process(request):
+        return jsonify(launch.result)
+    else:
+        return launch.error
         
         
 def main():
