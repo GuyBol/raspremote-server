@@ -17,25 +17,15 @@ app = Flask("raspremote-server")
 def index():
     return "It works!"
 
-# temporary, for demo purpose
-@app.route(API_PATH + CURRENT_API_VERSION + 'ps')
-def ps():
-    p = subprocess.Popen(['ps', '-ef'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    lines = []
-    for line in p.stdout:
-        lines.append(line)
-    return jsonify({'lines': lines})
 
 ''' Command line input '''
 @app.route(API_PATH + CURRENT_API_VERSION + 'cli', methods=['POST'])
 def cli():
-    if not request.json:
-        abort(400)
     command_line = CommandLine()
     if command_line.process(request):
-        return command_line.result
+        return jsonify(command_line.result)
     else:
-        return command_line.error
+        abort(command_line.error)
 
 ''' Launch a program '''
 @app.route(API_PATH + CURRENT_API_VERSION + 'launch', methods=['POST'])
@@ -44,8 +34,17 @@ def launch():
     if launch.process(request):
         return jsonify(launch.result)
     else:
-        return launch.error
+        abort(launch.error)
         
+''' Structured ps '''
+@app.route(API_PATH + CURRENT_API_VERSION + 'ps')
+def ps():
+    p = subprocess.Popen(['ps', '-ef'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    lines = []
+    for line in p.stdout:
+        lines.append(line)
+    return jsonify({'lines': lines})
+    
         
 def main():
     if len(sys.argv) < 2:

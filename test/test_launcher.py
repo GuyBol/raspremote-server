@@ -13,7 +13,7 @@ class LauncherMock(Launcher):
         return True
 
 
-class TestExecutor(unittest.TestCase):
+class TestLauncher(unittest.TestCase):
     
     def test_process_without_json(self):
         launcher = Launcher()
@@ -46,3 +46,6 @@ class TestExecutor(unittest.TestCase):
         self.assertFalse(hasattr(launcher, 'executed_command'))
         self.assertEqual(launcher.error, 400)
         
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,41 +1,44 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
-from flask import request, jsonify
+from executor import Executor
 import subprocess
-import os
 
 
 ''' Class to process a command line request '''
-class CommandLine(object):
+class CommandLine(Executor):
     
-    def __init__(self):
-        self.error = 200
-    
-    def process(self, req):
-        if not 'command' in request.json:
+    ''' Process a request with json data in input '''
+    def process_with_json(self, json):
+        command = self.extract_command(json)
+        if command:
+            return self.execute_command(command)
+        else:
+            self.error = 400
             return False
-        command = request.json['command']
-        self.result = self.execute(command)
+            
+    def extract_command(self, json):
+        if 'command' in json:
+            return json['command'].split(' ')
+    
+    def execute_command(self, command):
+        p = self.popen(command)
+        if hasattr(self, 'error'):
+            return False
+        if p.stdout:
+            stdout = []
+            for line in p.stdout:
+                stdout.append(line)
+            self.result['stdout'] = stdout
+        if p.stderr:
+            stderr = []
+            for line in p.stderr:
+                stderr.append(line)
+            self.result['stderr'] = stderr
         return True
     
-    def execute(self, command):
-        splitted = command.split(' ')
-        retDict = {}
-        # Use Popen in most cases, except if query to run in background (ending with &)
-        if splitted[-1][-1] != '&':
-            p = subprocess.Popen(splitted, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            if p.stdout:
-                stdout = []
-                for line in p.stdout:
-                    stdout.append(line)
-                retDict['stdout'] = stdout
-            if p.stderr:
-                stderr = []
-                for line in p.stderr:
-                    stderr.append(line)
-                retDict['stderr'] = stderr
-        else:
-            # Query to run in background
-            os.system(command)
-        return jsonify(retDict)
+    def popen(self, command):
+        try:
+            return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except:
+            self.error = 500
