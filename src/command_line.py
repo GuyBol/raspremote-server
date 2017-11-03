@@ -14,7 +14,8 @@ class CommandLine(Executor):
         if command:
             return self.execute_command(command)
         else:
-            self.error = 400
+            if not hasattr(self, 'error'):
+                self.error = 400
             return False
             
     def extract_command(self, json):
@@ -39,6 +40,7 @@ class CommandLine(Executor):
     
     def popen(self, command):
         try:
-            return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            return subprocess.Popen(command, stdout=subprocess.PIPE,
+                                             stderr=subprocess.STDOUT)
         except:
             self.error = 500

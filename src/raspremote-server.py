@@ -3,9 +3,10 @@
 
 from flask import Flask, jsonify, abort, request
 import subprocess
-from command_line import CommandLine
 import sys
-import launcher
+from command_line import CommandLine
+from launcher import Launcher
+from ps import Ps
 
 API_PATH = "/raspremote/api/"
 CURRENT_API_VERSION = "v1.0/"
@@ -30,7 +31,7 @@ def cli():
 ''' Launch a program '''
 @app.route(API_PATH + CURRENT_API_VERSION + 'launch', methods=['POST'])
 def launch():
-    launch = launcher.Launcher()
+    launch = Launcher()
     if launch.process(request):
         return jsonify(launch.result)
     else:
@@ -39,11 +40,11 @@ def launch():
 ''' Structured ps '''
 @app.route(API_PATH + CURRENT_API_VERSION + 'ps')
 def ps():
-    p = subprocess.Popen(['ps', '-ef'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    lines = []
-    for line in p.stdout:
-        lines.append(line)
-    return jsonify({'lines': lines})
+    ps = Ps()
+    if ps.process(request):
+        return jsonify(ps.result)
+    else:
+        abort(ps.error)
     
         
 def main():

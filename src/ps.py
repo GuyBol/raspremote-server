@@ -13,7 +13,19 @@ class Ps(CommandLine):
         Apply default -ef option
     '''
     def process_without_json(self):
-        return self.execute_command(['ps', '-ef'])
+        if not self.execute_command(['ps', '-ef']):
+            if not hasattr(self, 'error'):
+                self.error = 400
+            return False
+        # Post process stdout to extract processes
+        stdout = self.result['stdout']
+        self.result = {}
+        self.result['processes'] = []
+        for line in stdout:
+            parsed = self.parse_line(line)
+            if parsed:
+                self.result['processes'].append(parsed)
+        return True
         
     ''' Process a request with json data in input
         Return an error as this is not implemented yet
@@ -25,9 +37,10 @@ class Ps(CommandLine):
     ''' Parse a ps line '''
     def parse_line(self, line):
         result = {}
-        regex = re.compile(r'(?P<uid>[\w\d]+)\s+(?P<pid>\d+)\s+(?P<ppid>\d+)\s+(?P<c>\d+)\s+(?P<stime>[\w\d:]+)\s+(?P<tty>\S+)\s+(?P<time>[\w:]+)\s+(?P<cmd>\S+)')
+        regex = re.compile(r'(?P<uid>[\w\d]+)\s+(?P<pid>\d+)\s+(?P<ppid>\d+)\s+(?P<c>\d+)\s+(?P<stime>[\w\d:]+)\s+(?P<tty>\S+)\s+(?P<time>[\w:]+)\s+(?P<cmd>[\S ]+)')
         match = regex.match(line)
         if match:
-            for key in ['uid', 'pid', 'ppid', 'c', 'stime', 'tty', 'time', 'cmd']:
+            for key in ['uid', 'pid', 'ppid', 'c',
+                        'stime', 'tty', 'time', 'cmd']:
                 result[key] = match.group(key)
         return result
