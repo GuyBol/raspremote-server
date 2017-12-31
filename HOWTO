@@ -1,0 +1,4 @@
+# Run unittests
+export PYTHONPATH=$(pwd)/src:$PYTHONPATH
+cd test
+python -m unittest discover

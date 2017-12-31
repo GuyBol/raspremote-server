@@ -7,6 +7,7 @@ import sys
 from command_line import CommandLine
 from launcher import Launcher
 from ps import Ps
+from ls import Ls
 
 API_PATH = "/raspremote/api/"
 CURRENT_API_VERSION = "v1.0/"
@@ -45,6 +46,15 @@ def ps():
         return jsonify(ps.result)
     else:
         abort(ps.error)
+
+''' List files in a path '''
+@app.route(API_PATH + CURRENT_API_VERSION + 'ls', methods=['POST'])
+def ls():
+    ls = Ls()
+    if ls.process(request):
+        return jsonify(ls.result)
+    else:
+        abort(ls.error)
     
         
 def main():
