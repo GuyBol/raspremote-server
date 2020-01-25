@@ -59,7 +59,7 @@ def ls():
         
 def main():
     if len(sys.argv) < 2:
-        print "Missing host"
+        print("Missing host")
         return False
     app.run(debug=True, host=sys.argv[1])
 

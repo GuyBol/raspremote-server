@@ -44,5 +44,5 @@ class Ls(CommandLine):
                 if match.group(key):
                     result[key] = match.group(key)
         else:
-            print "Don't match"
+            print("Don't match")
         return result
