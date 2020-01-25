@@ -1,5 +1,4 @@
-
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import unittest
@@ -13,9 +12,9 @@ class PsMock(Ps):
     def popen(self, command):
         self.executed_command = command
         p = PopenMock()
-        p.stdout.append('UID        PID  PPID  C STIME TTY          TIME CMD\n')
-        p.stdout.append('root         1     0  0 18:17 ?        00:00:01 /sbin/init splash\n')
-        p.stdout.append('tanguy    1662  1133  0 18:18 ?        00:00:00 /usr/lib/x86_64-linux-gnu/indicator-bluetooth/indicator-bluetooth-service\n')
+        p.stdout.append('UID        PID  PPID  C STIME TTY          TIME CMD\n'.encode())
+        p.stdout.append('root         1     0  0 18:17 ?        00:00:01 /sbin/init splash\n'.encode())
+        p.stdout.append('tanguy    1662  1133  0 18:18 ?        00:00:00 /usr/lib/x86_64-linux-gnu/indicator-bluetooth/indicator-bluetooth-service\n'.encode())
         return p
 
 

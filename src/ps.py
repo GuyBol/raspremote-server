@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 from command_line import CommandLine
@@ -6,13 +6,13 @@ import subprocess
 import re
 
 
-''' Class to process ps entry and to format the reply '''
 class Ps(CommandLine):
+    ''' Class to process ps entry and to format the reply '''
     
-    ''' Process a request without json data in input
-        Apply default -ef option
-    '''
     def process_without_json(self):
+        ''' Process a request without json data in input
+            Apply default -ef option
+        '''
         if not self.execute_command(['ps', '-ef']):
             if not hasattr(self, 'error'):
                 self.error = 400
@@ -27,15 +27,16 @@ class Ps(CommandLine):
                 self.result['processes'].append(parsed)
         return True
         
-    ''' Process a request with json data in input
-        Return an error as this is not implemented yet
-    '''
     def process_with_json(self, json):
+        ''' Process a request with json data in input
+            Return an error as this is not implemented yet
+        '''
         self.error = 400
         return False
         
-    ''' Parse a ps line '''
     def parse_line(self, line):
+        ''' Parse a ps line '''
+        line = line
         result = {}
         regex = re.compile(r'(?P<uid>[\w\d]+)\s+(?P<pid>\d+)\s+(?P<ppid>\d+)\s+(?P<c>\d+)\s+(?P<stime>[\w\d:]+)\s+(?P<tty>\S+)\s+(?P<time>[\w:]+)\s+(?P<cmd>[\S ]+)')
         match = regex.match(line)

@@ -1,14 +1,14 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 from executor import Executor
 import os
 
-''' Class to launch a program in background '''
 class Launcher(Executor):
+    ''' Class to launch a program in background '''
     
-    ''' Process a request with json data in input '''
     def process_with_json(self, json):
+        ''' Process a request with json data in input '''
         command = self.generate_command(json)
         if command:
             return self.execute_command(command)
@@ -16,13 +16,13 @@ class Launcher(Executor):
             self.error = 400
             return False
     
-    ''' Decode the json and generate the command line '''
     def generate_command(self, json):
+        ''' Decode the json and generate the command line '''
         if 'program' in json:
             return json['program'] + ' &'
     
-    ''' Run the command '''
     def execute_command(self, command):
+        ''' Run the command '''
         os.system(command)
         return True
         

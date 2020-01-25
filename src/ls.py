@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 from command_line import CommandLine
@@ -6,11 +6,11 @@ import re
 
 
 
-''' Class to process ls entry and to format the reply '''
 class Ls(CommandLine):
+    ''' Class to process ls entry and to format the reply '''
 
-    ''' Process a request with json data in input '''
     def process_with_json(self, json):
+        ''' Process a request with json data in input '''
         if 'path' in json:
             path = json['path']
             if not self.execute_command(['ls', '-l', path]):
@@ -31,8 +31,8 @@ class Ls(CommandLine):
             self.error = 400
             return False
     
-    ''' Parse a ls -l line '''
     def parse_line(self, line):
+        ''' Parse a ls -l line '''
         result = {}
         regex = re.compile(r'(?P<type>[dl\-])[rwx\-]{9} +\d+ \w+ +\w+ +\d+ \w+ \d+ +[\d:]+ +(?P<name>.*?)( -> (?P<target>.*))?\n')
         match = regex.match(line)

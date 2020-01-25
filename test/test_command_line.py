@@ -1,5 +1,4 @@
-
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import unittest
@@ -18,10 +17,10 @@ class CommandLineMock(CommandLine):
     def popen(self, command):
         self.executed_command = command
         p = PopenMock()
-        p.stdout.append('line1')
-        p.stdout.append('line2')
-        p.stderr.append('error1')
-        p.stderr.append('error2')        
+        p.stdout.append('line1'.encode())
+        p.stdout.append('line2'.encode())
+        p.stderr.append('error1'.encode())
+        p.stderr.append('error2'.encode())        
         return p
 
 

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import unittest
@@ -13,10 +13,10 @@ class LsMock(Ls):
     def popen(self, command):
         self.executed_command = command
         p = PopenMock()
-        p.stdout.append('total 92\n')
-        p.stdout.append('drwxr-xr-x   2 root root  4096 Apr 22  2014 bin\n')
-        p.stdout.append('lrwxrwxrwx   1 root root    33 Apr 22  2014 initrd.img -> boot/initrd.img-3.13.0-24-generic\n')
-        p.stdout.append('-rw-rw-r-- 1 vagrant vagrant 1949 Dec 31 14:38 test_command_line.py\n')
+        p.stdout.append('total 92\n'.encode())
+        p.stdout.append('drwxr-xr-x   2 root root  4096 Apr 22  2014 bin\n'.encode())
+        p.stdout.append('lrwxrwxrwx   1 root root    33 Apr 22  2014 initrd.img -> boot/initrd.img-3.13.0-24-generic\n'.encode())
+        p.stdout.append('-rw-rw-r-- 1 vagrant vagrant 1949 Dec 31 14:38 test_command_line.py\n'.encode())
         return p
 
 
